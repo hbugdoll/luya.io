@@ -16,7 +16,7 @@ See the GIF below:
 
 ![Creating ImagesliderBlock](../img/imagesliderblock-create.gif "Creating block with commands")
 
-This will automatically create an pre filled `ImagesliderBlock.php` in our **blocks** directory and an empty view file with the same name in **views/blocks**
+This will automatically create an pre filled `ImagesliderBlock.php` in our **blocks** directory and an empty view file with the same name in **blocks/views**
 
 ## Register an external JavaScript and CSS file
 
@@ -66,7 +66,7 @@ The only part which missing is the rendered view code. We want to parse each ima
 
 Using a stylesheet is advised also for the sake of a short example, we are using CSS inline code here.
 
-The final frontend view file in `views/blocks/ImagesliderBlock.php` will look like this:
+The final frontend view file in `blocks/views/ImagesliderBlock.php` will look like this:
 
 ```php
 <?php

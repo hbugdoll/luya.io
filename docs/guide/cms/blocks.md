@@ -70,7 +70,7 @@ public function getFieldHelp()
 Read more about details regarding <class name="luya\cms\base\InternalBaseBlock" method="config" /> in [Block Types](blocktypes)
 :::
 
-As we have switched to <class name="luya\cms\base\PhpBlock" /> by default you now have to create also a view file, which is located in the view folder of your application: `app/views/blocks/`. The view itself must have the same name as the class name of your block, e.g. `TextTransformBlock.php`. 
+As we have switched to <class name="luya\cms\base\PhpBlock" /> by default you now have to create also a view file, which is located in the view folder of your application: `app/blocks/views`. The view itself must have the same name as the class name of your block, e.g. `TextTransformBlock.php`. 
 
 In the example above, the view file should look like this:
 

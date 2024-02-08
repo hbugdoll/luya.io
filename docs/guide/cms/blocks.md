@@ -95,6 +95,27 @@ In order to retrieve values from configurations (`$this->[METHOD]`):
 
 Check the <class name="luya\cms\base\PhpBlockView" /> for full method reference to use inside the PHP block view.
 
+### Block rendering internals
+
+For a more detailed understanding of the nexus of a block and its view file, the corresponding function call paths are listed below.
+
+In admin context:
+
+`NavItemPage::getPlaceholder()`
+&rarr; `NavItemPage::getBlockItem()`
+&rarr; `BlockInterface::renderAdmin()`
+&rarr; `PhpBlockInterface::admin()` implemented in your block, e.g. `TextTransformBlock::admin()` in `app/blocks/TextTransformBlock.php`
+
+In frontend context:
+
+`NavItemPage::renderPlaceholder()`
+&rarr; `NavItemPage::renderPlaceholderRecursive()`
+&rarr; `BlockInterface::renderFrontend()`
+&rarr; `PhpBlockInterface::frontend()`
+&rarr; `View::render()`
+&rarr; `View::renderFile()`
+&rarr; block view file, e.g. `app/blocks/views/TextTransformBlock.php`
+
 ## Register and import
 
 After creating a block, you have to *import* it into your application. The reason behind the import process is to avoid rely on database structure (which cant be tracked in a VCS or SVN easily) and to work with PHP files you can manage in version control system (e.g. GitHub or BitBucket). Run the [Import Command](/guide/app/console):
@@ -147,7 +168,7 @@ The following keys are available:
 
 + **id**: Returns the unique identifier from the CMS context.
 + **blockId**: Returns the id of this block (unique identifier).
-+ **context**: Returns `'frontend'` or `'admin'` to find out in which context you are.
++ **context**: Returns `'admin'` or `'frontend'` to find out in which context you are.
 + **pageObject**: Returns the <class name="luya\cms\models\NavItemPage" /> object where the block is located.
 + **isFirst**: Returns whether this block is the first in its placeholder or not.
 + **isLast**: Return whether this block is the last in its placeholder or not.

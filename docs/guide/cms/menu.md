@@ -10,11 +10,12 @@ The menu component is registered automatically in your config, if you need to co
 return [
     // ...
     'components' => [
+        // ...
         'menu' => [
             'class' => 'luya\cms\Menu',
             // component properties
         ],
-    ]
+    ],
 ]
 ```
 
@@ -149,17 +150,17 @@ foreach (Yii::$app->menu->getLevelContainer(2) as $secondItem) {
 
 There is also a possibility to inject data into the menu component direct from every part of your web application. An item inject gives a module the possibility to add items into the menu container.
 
-The most important property of the <class name="luya\cms\menu\InjectItem" /> class is the `childOf` definition, this is where you have to define who is the parent *nav_item.id*. An item injection should be done during the after load event to attach at the right initializer moment of the item, but could be done any time. To inject an item use the <class name="luya\cms\Menu" method="injectItem" />` method on the menu container like below:
+The most important property of the <class name="luya\cms\menu\InjectItem" /> class is the `childOf` definition, this is where you have to define who is the parent by `nav_item.id`. An item injection should be done during the after load event to attach at the right initializer moment of the item, but could be done any time. To inject an item use the <class name="luya\cms\Menu" method="injectItem" /> method on the menu container like below:
 
 ```php
 Yii::$app->menu->injectItem(new InjectItem([
-    'childOf' => 123,
+    'childOf' => 123, // nav_item.id
     'title' => 'This is the inject title',
     'alias' => 'this-is-the-inject-alias',
 ]));
 ```
 
-To attach the item at the right moment you can bootstrap your module and use the `luya\cms\Menu::EVENT_AFTER_LOAD` event of the menu component. The event observed could be done as configuration or inside a bootstraping file:
+To attach the item at the right moment you can bootstrap your module and use the `luya\cms\Menu::EVENT_AFTER_LOAD` event of the menu component. The event observed could be done inside a bootstraping file:
 
 ```php
 use luya\cms\Menu;
@@ -176,21 +177,41 @@ Yii::$app->menu->on(Menu::EVENT_AFTER_LOAD, function($event) {
 });
 ```
 
-Or as example inside the application configuration:
+Or for instance inside the application configuration:
 
 ```php
 'components' => [
+   // ...
    'menu' => [
          'class' => 'luya\cms\Menu',
-         'on eventAfterLoad'  => function($event) {
+         'on eventAfterLoad' => function($event) {
             $event->sender->injectItem(new \luya\cms\menu\InjectItem([
                 'childOf' => 123,
                 'title' => 'Inject Title',
                 'alias' => 'inject-title',
             ]));
          }
-   ]
-]
+   ],
+],
+```
+
+#### Order of injected menu items
+
+You can control the order of injected items via <class name="luya\cms\menu\InjectItem" prop="sortIndex" /> property.
+
+To inject an item as first child of its parent:
+
+```php
+Yii::$app->menu->injectItem(new InjectItem([
+    'childOf' => 123,
+    'title' => 'Inject Title',
+    'alias' => 'inject-title',
+    'sortIndex' => 0, // default
+```
+
+When then accessing the menu data (of the injected item and its siblings) you have to explicitly sort using the <class name="luya\cms\menu\Query" method="orderBy" /> method:
+```php
+Yii::$app->menu->find()->where(...)->orderBy(['sort_index' => SORT_ASC])->all()
 ```
 
 ## Events
@@ -199,6 +220,7 @@ The menu component triggers certain <class name="yii\base\Event" />. You can hoo
 
 ```php
 'components' => [
+    // ...
     'menu' => [
         'class' => 'luya\cms\Menu',
         'on eventOnItemFind' => function(\luya\cms\frontend\events\MenuItemEvent $event) {
